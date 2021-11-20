@@ -4,8 +4,9 @@ import com.sonu.openapi.api.auth.OpenApiAuthService
 import com.sonu.openapi.persistence.AccountPropertiesDao
 import com.sonu.openapi.persistence.AuthTokenDao
 import com.sonu.openapi.session.SessionManager
+import javax.inject.Inject
 
-class AuthRepository constructor(
+class AuthRepository @Inject constructor(
     authTokenDao: AuthTokenDao,
     openApiAuthService: OpenApiAuthService,
     accountPropertiesDao: AccountPropertiesDao,
