@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/auth_navigation_graph"
+        app:startDestination="@id/launcherFragment">
+
+    <fragment
+            android:id="@+id/launcherFragment"
+            android:name="com.sonu.openapi.ui.auth.LauncherFragment"
+            android:label="LauncherFragment" >
+        <action
+                app:popEnterAnim="@anim/slide_in_left"
+                app:popExitAnim="@anim/slide_out_right"
+                app:enterAnim="@anim/slide_in_right"
+                app:exitAnim="@anim/slide_out_left"
+                android:id="@+id/action_launcherFragment_to_registerFragment"
+                app:destination="@id/registerFragment" />
+        <action
+                app:popEnterAnim="@anim/slide_in_left"
+                app:popExitAnim="@anim/slide_out_right"
+                app:enterAnim="@anim/slide_in_right"
+                app:exitAnim="@anim/slide_out_left"
+                android:id="@+id/action_launcherFragment_to_loginFragment"
+                app:destination="@id/loginFragment" />
+        <action
+                app:popEnterAnim="@anim/slide_in_left"
+                app:popExitAnim="@anim/slide_out_right"
+                app:enterAnim="@anim/slide_in_right"
+                app:exitAnim="@anim/slide_out_left"
+                android:id="@+id/action_launcherFragment_to_forgotPasswordFragment"
+                app:destination="@id/forgotPasswordFragment" />
+    </fragment>
+    <fragment
+            android:id="@+id/forgotPasswordFragment"
+            android:name="com.sonu.openapi.ui.auth.ForgotPasswordFragment"
+            android:label="ForgotPasswordFragment" />
+    <fragment
+            android:id="@+id/loginFragment"
+            android:name="com.sonu.openapi.ui.auth.LoginFragment"
+            android:label="LoginFragment" />
+    <fragment
+            android:id="@+id/registerFragment"
+            android:name="com.sonu.openapi.ui.auth.RegisterFragment"
+            android:label="RegisterFragment" />
+</navigation>
