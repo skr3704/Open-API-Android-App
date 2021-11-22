@@ -6,7 +6,12 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.Observer
 import com.sonu.openapi.R
+import com.sonu.openapi.util.ApiEmptyResponse
+import com.sonu.openapi.util.ApiErrorResponse
+import com.sonu.openapi.util.ApiSuccessResponse
+
 class LoginFragment : BaseAuthFragment() {
 
 
@@ -21,6 +26,22 @@ class LoginFragment : BaseAuthFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         Log.d(TAG, "LoginFragment: $viewModel")
+
+        viewModel.testLogin().observe(viewLifecycleOwner, Observer { response ->
+
+            when (response) {
+                is ApiSuccessResponse -> {
+                    Log.d(TAG, "LOGIN RESPONSE: ${response.body}")
+                }
+                is ApiErrorResponse -> {
+                    Log.d(TAG, "LOGIN RESPONSE: ${response.errorMessage}")
+                }
+                is ApiEmptyResponse -> {
+                    Log.d(TAG, "LOGIN RESPONSE: Empty Response")
+                }
+            }
+        })
+
 
     }
 }
