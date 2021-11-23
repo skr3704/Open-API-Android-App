@@ -12,6 +12,6 @@ interface AuthTokenDao {
     fun insert(token: AuthToken): Long
 
     @Query("UPDATE AUTH_TOKEN SET token = null WHERE account_pk = :pk")
-    fun update(pk: Int)
+    fun nullifyToken(pk: Int)
 
 }
