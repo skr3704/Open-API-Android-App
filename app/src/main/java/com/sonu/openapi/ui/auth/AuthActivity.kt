@@ -9,6 +9,7 @@ import androidx.navigation.NavController
 import androidx.navigation.NavDestination
 import com.sonu.openapi.R
 import com.sonu.openapi.ui.BaseActivity
+import com.sonu.openapi.ui.DataState
 import com.sonu.openapi.ui.ResponseType
 import com.sonu.openapi.ui.auth.state.AuthStateEvent
 import com.sonu.openapi.ui.main.MainActivity
@@ -60,11 +61,11 @@ class AuthActivity : BaseActivity(), NavController.OnDestinationChangedListener 
         })
 
         sessionManager.cachedToken.observe(this, { authToken ->
+
             if (authToken != null && authToken.account_pk != -1 && authToken.token != null) {
                 navigateToMainActivity()
             }
         })
-
 
     }
 
