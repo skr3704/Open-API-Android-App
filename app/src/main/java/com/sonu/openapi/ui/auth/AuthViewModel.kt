@@ -1,5 +1,6 @@
 package com.sonu.openapi.ui.auth
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import com.sonu.openapi.api.auth.network_responses.LoginResponse
@@ -47,12 +48,16 @@ class AuthViewModel @Inject constructor(
         return AuthViewState()
     }
 
-    fun setLoginFields(loginFields: LoginFields) {
-        val state = getCurrentViewStateOrNew()
-        val value = if (state.loginFields == loginFields) return else loginFields
-        state.loginFields = loginFields
-        _viewState.value = state
+
+    fun setLoginFields(loginFields: LoginFields){
+        val update = getCurrentViewStateOrNew()
+        if(update.loginFields == loginFields){
+            return
+        }
+        update.loginFields = loginFields
+        _viewState.value = update
     }
+
 
     fun setAuthToken(authToken: AuthToken) {
         val update = getCurrentViewStateOrNew()
@@ -70,6 +75,16 @@ class AuthViewModel @Inject constructor(
         }
         update.registrationFields = registrationFields
         _viewState.value = update
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        Log.d(TAG, "onCleared: ")
+//        authRepository.cancelActiveJobs()
+    }
+
+    fun cancelActiveJobs() {
+        authRepository.cancelActiveJobs()
     }
 
 }
