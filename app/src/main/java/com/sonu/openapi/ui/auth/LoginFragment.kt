@@ -9,6 +9,8 @@ import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import com.sonu.openapi.R
 import com.sonu.openapi.models.AuthToken
+import com.sonu.openapi.ui.auth.state.AuthStateEvent
+import com.sonu.openapi.ui.auth.state.AuthStateEvent.*
 import com.sonu.openapi.ui.auth.state.LoginFields
 import com.sonu.openapi.util.ApiEmptyResponse
 import com.sonu.openapi.util.ApiErrorResponse
@@ -31,14 +33,25 @@ class LoginFragment : BaseAuthFragment() {
         Log.d(TAG, "LoginFragment: $viewModel")
 
         subscribeObservers()
-        login_button.setOnClickListener { viewModel.setAuthToken(AuthToken(1,"fjsdjdfs")) }
+        login_button.setOnClickListener {
+            login()
+        }
+    }
+
+    private fun login() {
+        viewModel.setStateEvent(
+            LoginAttempt(
+                input_email.text.toString(),
+                input_password.text.toString(),
+            )
+        )
     }
 
     private fun subscribeObservers() {
-        viewModel.viewState.observe(viewLifecycleOwner , {
+        viewModel.viewState.observe(viewLifecycleOwner, {
             it.loginFields?.let {
-                it.login_email?.let{input_email.setText(it)}
-                it.login_password?.let{input_password.setText(it)}
+                it.login_email?.let { input_email.setText(it) }
+                it.login_password?.let { input_password.setText(it) }
             }
         })
     }

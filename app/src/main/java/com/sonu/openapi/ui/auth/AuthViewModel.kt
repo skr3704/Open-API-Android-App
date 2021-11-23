@@ -26,13 +26,19 @@ class AuthViewModel @Inject constructor(
 
         return when (stateEvent) {
             is LoginAttempt -> {
-                AbsentLiveData.create()
+                authRepository.attemptLogin(stateEvent.email, stateEvent.password)
             }
             CheckPreviousAuthEvent -> {
                 AbsentLiveData.create()
             }
             is RegisterAttemptEvent -> {
-                AbsentLiveData.create()
+                authRepository.attemptRegistration(
+                    stateEvent.email,
+                    stateEvent.username,
+                    stateEvent.password,
+                    stateEvent.confirm_password
+                )
+
             }
         }
     }
@@ -57,9 +63,9 @@ class AuthViewModel @Inject constructor(
         _viewState.value = update
     }
 
-    fun setRegistrationFields(registrationFields: RegistrationFields){
+    fun setRegistrationFields(registrationFields: RegistrationFields) {
         val update = getCurrentViewStateOrNew()
-        if(update.registrationFields == registrationFields){
+        if (update.registrationFields == registrationFields) {
             return
         }
         update.registrationFields = registrationFields

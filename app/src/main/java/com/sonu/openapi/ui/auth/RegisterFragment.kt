@@ -8,6 +8,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import com.sonu.openapi.R
+import com.sonu.openapi.ui.auth.state.AuthStateEvent
+import com.sonu.openapi.ui.auth.state.AuthStateEvent.*
 import com.sonu.openapi.ui.auth.state.RegistrationFields
 import com.sonu.openapi.util.ApiEmptyResponse
 import com.sonu.openapi.util.ApiErrorResponse
@@ -30,6 +32,20 @@ class RegisterFragment : BaseAuthFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         subscribeObservers()
+        register_button.setOnClickListener {
+            register()
+        }
+    }
+
+    private fun register() {
+        viewModel.setStateEvent(
+            RegisterAttemptEvent(
+                input_email.text.toString(),
+                input_username.text.toString(),
+                input_password.text.toString(),
+                input_password_confirm.text.toString(),
+            )
+        )
     }
 
     private fun subscribeObservers() {
