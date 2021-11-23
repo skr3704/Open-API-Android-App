@@ -10,6 +10,7 @@ import androidx.navigation.NavDestination
 import com.sonu.openapi.R
 import com.sonu.openapi.ui.BaseActivity
 import com.sonu.openapi.ui.ResponseType
+import com.sonu.openapi.ui.auth.state.AuthStateEvent
 import com.sonu.openapi.ui.main.MainActivity
 import com.sonu.openapi.viewmodels.ViewModelProviderFactory
 import kotlinx.android.synthetic.main.activity_auth.*
@@ -28,7 +29,12 @@ class AuthActivity : BaseActivity(), NavController.OnDestinationChangedListener 
         setContentView(R.layout.activity_auth)
         viewmodel = ViewModelProvider(this, providerFactory).get(AuthViewModel::class.java)
         subscribeObservers()
+        checkForPreviousAuthUser()
 
+    }
+
+    private fun checkForPreviousAuthUser() {
+        viewmodel.setStateEvent(AuthStateEvent.CheckPreviousAuthEvent)
     }
 
     private fun subscribeObservers() {

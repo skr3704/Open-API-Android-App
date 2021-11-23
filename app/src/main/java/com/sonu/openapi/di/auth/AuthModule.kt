@@ -1,5 +1,6 @@
 package com.sonu.openapi.di.auth
 
+import android.content.SharedPreferences
 import com.sonu.openapi.api.auth.OpenApiAuthService
 import com.sonu.openapi.persistence.AccountPropertiesDao
 import com.sonu.openapi.persistence.AuthTokenDao
@@ -26,13 +27,17 @@ class AuthModule {
         sessionManager: SessionManager,
         authTokenDao: AuthTokenDao,
         accountPropertiesDao: AccountPropertiesDao,
-        openApiAuthService: OpenApiAuthService
+        openApiAuthService: OpenApiAuthService,
+        sharedPreferences: SharedPreferences,
+        editor: SharedPreferences.Editor
     ): AuthRepository {
         return AuthRepository(
             authTokenDao,
             openApiAuthService,
             accountPropertiesDao,
-            sessionManager
+            sessionManager,
+            sharedPreferences,
+            editor
         )
     }
 

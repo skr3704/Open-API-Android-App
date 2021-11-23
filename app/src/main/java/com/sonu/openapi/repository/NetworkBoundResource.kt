@@ -8,6 +8,7 @@ import com.sonu.openapi.ui.Response
 import com.sonu.openapi.ui.ResponseType
 import com.sonu.openapi.util.*
 import com.sonu.openapi.util.Constants.Companion.NETWORK_TIMEOUT
+import com.sonu.openapi.util.Constants.Companion.TESTING_CACHE_DELAY
 import com.sonu.openapi.util.Constants.Companion.TESTING_NETWORK_DELAY
 import com.sonu.openapi.util.ErrorHandling.Companion.ERROR_CHECK_NETWORK_CONNECTION
 import com.sonu.openapi.util.ErrorHandling.Companion.ERROR_UNKNOWN
@@ -18,7 +19,8 @@ import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.Dispatchers.Main
 
 abstract class NetworkBoundResource<ResponseObject, ViewStateType>(
-    isNetworkAvailable: Boolean
+    isNetworkAvailable: Boolean,
+    isNetworkRequest: Boolean
 ) {
     private val TAG = "AppDebug"
     protected val result = MediatorLiveData<DataState<ViewStateType>>()
@@ -28,29 +30,39 @@ abstract class NetworkBoundResource<ResponseObject, ViewStateType>(
     init {
         setJob(initNewJob())
         setValue(DataState.loading(isLoading = true, cachedData = null))
-        if (isNetworkAvailable) {
-            coroutineScope.launch {
-                //simulate a network delay for  testing
+        if (isNetworkRequest) {
+            if (isNetworkAvailable) {
+                coroutineScope.launch {
+                    //simulate a network delay for  testing
 
-                delay(TESTING_NETWORK_DELAY)
-                withContext(Main) {
-                    val apiResponse = createCall()
-                    result.addSource(apiResponse) { response ->
-                        result.removeSource(apiResponse)
-                        coroutineScope.launch {
-                            handleNetworkCall(response)
+                    delay(TESTING_NETWORK_DELAY)
+                    withContext(Main) {
+                        val apiResponse = createCall()
+                        result.addSource(apiResponse) { response ->
+                            result.removeSource(apiResponse)
+                            coroutineScope.launch {
+                                handleNetworkCall(response)
+                            }
                         }
                     }
                 }
-            }
-            GlobalScope.launch(IO) {
-                delay(NETWORK_TIMEOUT)
-                if (!job.isCompleted) {
-                    job.cancel(CancellationException(UNABLE_TO_RESOLVE_HOST))
+                GlobalScope.launch(IO) {
+                    delay(NETWORK_TIMEOUT)
+                    if (!job.isCompleted) {
+                        job.cancel(CancellationException(UNABLE_TO_RESOLVE_HOST))
+                    }
                 }
+            } else {
+                onErrorReturn(UNABLE_TODO_OPERATION_WO_INTERNET, true, false)
             }
         } else {
-            onErrorReturn(UNABLE_TODO_OPERATION_WO_INTERNET, true, false)
+            coroutineScope.launch {
+                //fake delay for testing
+                delay(TESTING_CACHE_DELAY)
+
+                //view data from cache only and return
+                createCacheReqestAndReturn()
+            }
         }
     }
 
@@ -136,6 +148,7 @@ abstract class NetworkBoundResource<ResponseObject, ViewStateType>(
     abstract suspend fun handleApiSuccessResponse(response: ApiSuccessResponse<ResponseObject>)
 
     abstract fun createCall(): LiveData<GenericApiResponse<ResponseObject>>
+    abstract suspend fun createCacheReqestAndReturn()
 
     abstract fun setJob(job: Job)
 }

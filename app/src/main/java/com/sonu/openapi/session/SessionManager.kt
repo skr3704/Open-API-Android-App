@@ -2,6 +2,7 @@ package com.sonu.openapi.session
 
 import android.app.Application
 import android.content.Context
+import android.content.SharedPreferences
 import android.net.ConnectivityManager
 import android.util.Log
 import androidx.lifecycle.LiveData
@@ -19,7 +20,8 @@ class SessionManager
 @Inject
 constructor(
     val authTokenDao: AuthTokenDao,
-    val application: Application
+    val application: Application,
+    val sharedPrefEdit: SharedPreferences.Editor
 ) {
 
     private val TAG: String = "AppDebug"
@@ -35,8 +37,6 @@ constructor(
 
     fun logout() {
         Log.d(TAG, "logout: ")
-
-
         CoroutineScope(IO).launch {
             var errorMessage: String? = null
             try {
@@ -55,6 +55,7 @@ constructor(
                 }
                 Log.d(TAG, "logout: finally")
                 setValue(null)
+                sharedPrefEdit.clear().apply()
             }
         }
     }

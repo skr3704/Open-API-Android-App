@@ -56,6 +56,7 @@ abstract class BaseActivity : DaggerAppCompatActivity(), DataStateChangeListener
                     }
                 }
                 is ResponseType.None -> {
+                    displayProgressBar(false)
                     Log.e(TAG, "handleStateError: error ${it.message}")
                 }
             }

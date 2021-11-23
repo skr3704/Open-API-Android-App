@@ -1,6 +1,8 @@
 package com.sonu.openapi.di
 
 import android.app.Application
+import android.content.Context
+import android.content.SharedPreferences
 import androidx.room.Room
 import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestManager
@@ -14,6 +16,7 @@ import com.sonu.openapi.persistence.AppDatabase.Companion.DATABASE_NAME
 import com.sonu.openapi.persistence.AuthTokenDao
 import com.sonu.openapi.util.Constants
 import com.sonu.openapi.util.LiveDataCallAdapterFactory
+import com.sonu.openapi.util.PreferenceKeys
 import dagger.Module
 import dagger.Provides
 import retrofit2.Retrofit
@@ -21,7 +24,21 @@ import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
 
 @Module
-class AppModule{
+class AppModule {
+    @Singleton
+    @Provides
+    fun provideSharedPreferences(application: Application): SharedPreferences {
+        return application.getSharedPreferences(
+            PreferenceKeys.APP_PREFERENCES,
+            Context.MODE_PRIVATE
+        )
+    }
+
+    @Singleton
+    @Provides
+    fun provideSharedPrefEditor(sharedPreferences: SharedPreferences): SharedPreferences.Editor {
+        return sharedPreferences.edit()
+    }
 
     @Singleton
     @Provides
@@ -31,7 +48,7 @@ class AppModule{
 
     @Singleton
     @Provides
-    fun provideRetrofitBuilder(gsonBuilder:  Gson): Retrofit.Builder{
+    fun provideRetrofitBuilder(gsonBuilder: Gson): Retrofit.Builder {
         return Retrofit.Builder()
             .baseUrl(Constants.BASE_URL)
             .addCallAdapterFactory(LiveDataCallAdapterFactory())
@@ -69,7 +86,10 @@ class AppModule{
 
     @Singleton
     @Provides
-    fun provideGlideInstance(application: Application, requestOptions: RequestOptions): RequestManager {
+    fun provideGlideInstance(
+        application: Application,
+        requestOptions: RequestOptions
+    ): RequestManager {
         return Glide.with(application)
             .setDefaultRequestOptions(requestOptions)
     }

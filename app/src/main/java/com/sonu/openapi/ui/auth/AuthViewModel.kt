@@ -30,7 +30,7 @@ class AuthViewModel @Inject constructor(
                 authRepository.attemptLogin(stateEvent.email, stateEvent.password)
             }
             CheckPreviousAuthEvent -> {
-                AbsentLiveData.create()
+                authRepository.checkPreviousAuthUser()
             }
             is RegisterAttemptEvent -> {
                 authRepository.attemptRegistration(
