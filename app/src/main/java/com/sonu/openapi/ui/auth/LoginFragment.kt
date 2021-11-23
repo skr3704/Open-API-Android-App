@@ -8,9 +8,11 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import com.sonu.openapi.R
+import com.sonu.openapi.ui.auth.state.LoginFields
 import com.sonu.openapi.util.ApiEmptyResponse
 import com.sonu.openapi.util.ApiErrorResponse
 import com.sonu.openapi.util.ApiSuccessResponse
+import kotlinx.android.synthetic.main.fragment_login.*
 
 class LoginFragment : BaseAuthFragment() {
 
@@ -27,21 +29,25 @@ class LoginFragment : BaseAuthFragment() {
         super.onViewCreated(view, savedInstanceState)
         Log.d(TAG, "LoginFragment: $viewModel")
 
-        viewModel.testLogin().observe(viewLifecycleOwner, Observer { response ->
+        subscribeObservers()
+    }
 
-            when (response) {
-                is ApiSuccessResponse -> {
-                    Log.d(TAG, "LOGIN RESPONSE: ${response.body}")
-                }
-                is ApiErrorResponse -> {
-                    Log.d(TAG, "LOGIN RESPONSE: ${response.errorMessage}")
-                }
-                is ApiEmptyResponse -> {
-                    Log.d(TAG, "LOGIN RESPONSE: Empty Response")
-                }
+    private fun subscribeObservers() {
+        viewModel.viewState.observe(viewLifecycleOwner , {
+            it.loginFields?.let {
+                it.login_email?.let{input_email.setText(it)}
+                it.login_password?.let{input_password.setText(it)}
             }
         })
+    }
 
-
+    override fun onDestroyView() {
+        super.onDestroyView()
+        viewModel.setLoginFields(
+            LoginFields(
+                input_email.text.toString(),
+                input_password.text.toString()
+            )
+        )
     }
 }
