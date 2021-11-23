@@ -3,20 +3,25 @@ package com.sonu.openapi.ui.auth
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.NavController
+import androidx.navigation.NavDestination
 import com.sonu.openapi.R
 import com.sonu.openapi.ui.BaseActivity
 import com.sonu.openapi.ui.ResponseType
 import com.sonu.openapi.ui.main.MainActivity
 import com.sonu.openapi.viewmodels.ViewModelProviderFactory
+import kotlinx.android.synthetic.main.activity_auth.*
 import javax.inject.Inject
 
-class AuthActivity : BaseActivity() {
+class AuthActivity : BaseActivity(), NavController.OnDestinationChangedListener {
 
     @Inject
     lateinit var providerFactory: ViewModelProviderFactory
 
     lateinit var viewmodel: AuthViewModel
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,6 +33,7 @@ class AuthActivity : BaseActivity() {
 
     private fun subscribeObservers() {
         viewmodel.dataState.observe(this, { dataState ->
+            onDataStateChange(dataState)
             Log.d(TAG, "authActivity DataState: $dataState")
             dataState.data?.let { data ->
                 data.data?.let { event ->
@@ -37,23 +43,6 @@ class AuthActivity : BaseActivity() {
                         }
                     }
                 }
-                data.response?.let { event ->
-                    event.getContentIfNotHandled()?.let {
-                        when (it.responseType) {
-                            is ResponseType.Dialog -> {
-                                //show dialog
-                            }
-                            ResponseType.None -> {
-                                //show  nothing
-                            }
-
-                            ResponseType.Toast -> {
-                                //show toast
-                            }
-                        }
-                    }
-                }
-
             }
         })
 
@@ -71,6 +60,21 @@ class AuthActivity : BaseActivity() {
         })
 
 
+    }
+
+    override fun onDestinationChanged(
+        controller: NavController,
+        destination: NavDestination,
+        arguments: Bundle?
+    ) {
+        //error
+//        viewmodel.cancelActiveJobs()
+    }
+
+
+    override fun displayProgressBar(bool: Boolean) {
+        if (bool) progress_bar.visibility = View.VISIBLE else progress_bar.visibility =
+            View.INVISIBLE
     }
 
     private fun navigateToMainActivity() {

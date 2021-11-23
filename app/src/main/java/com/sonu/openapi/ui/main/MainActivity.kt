@@ -2,7 +2,7 @@ package com.sonu.openapi.ui.main
 
 import android.content.Intent
 import android.os.Bundle
-import android.os.PersistableBundle
+import android.view.View
 import com.sonu.openapi.R
 import com.sonu.openapi.ui.BaseActivity
 import com.sonu.openapi.ui.auth.AuthActivity
@@ -23,6 +23,10 @@ class MainActivity : BaseActivity() {
                 navigateToAuthActivity()
             }
         })
+    }
+    override fun displayProgressBar(bool: Boolean) {
+        if (bool) progress_bar.visibility = View.VISIBLE else progress_bar.visibility =
+            View.INVISIBLE
     }
 
     private fun navigateToAuthActivity() {
