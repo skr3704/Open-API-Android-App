@@ -10,11 +10,17 @@
       <map>
         <entry key="..\:/CodingWithMitch/Open-API-Android-App/app/src/main/res/layout/activity_auth.xml" value="0.1" />
         <entry key="..\:/CodingWithMitch/Open-API-Android-App/app/src/main/res/layout/activity_main.xml" value="0.1734375" />
+        <entry key="..\:/CodingWithMitch/Open-API-Android-App/app/src/main/res/layout/fragment_account.xml" value="0.1" />
         <entry key="..\:/CodingWithMitch/Open-API-Android-App/app/src/main/res/layout/fragment_blog.xml" value="0.25" />
+        <entry key="..\:/CodingWithMitch/Open-API-Android-App/app/src/main/res/layout/fragment_change_password.xml" value="0.1" />
+        <entry key="..\:/CodingWithMitch/Open-API-Android-App/app/src/main/res/layout/fragment_create_blog.xml" value="0.1" />
         <entry key="..\:/CodingWithMitch/Open-API-Android-App/app/src/main/res/layout/fragment_forgot_password.xml" value="0.1" />
         <entry key="..\:/CodingWithMitch/Open-API-Android-App/app/src/main/res/layout/fragment_launcher.xml" value="0.33" />
         <entry key="..\:/CodingWithMitch/Open-API-Android-App/app/src/main/res/layout/fragment_login.xml" value="0.18" />
         <entry key="..\:/CodingWithMitch/Open-API-Android-App/app/src/main/res/layout/fragment_register.xml" value="0.1" />
+        <entry key="..\:/CodingWithMitch/Open-API-Android-App/app/src/main/res/layout/fragment_update_account.xml" value="0.1" />
+        <entry key="..\:/CodingWithMitch/Open-API-Android-App/app/src/main/res/layout/fragment_update_blog.xml" value="0.1" />
+        <entry key="..\:/CodingWithMitch/Open-API-Android-App/app/src/main/res/layout/fragment_view_blog.xml" value="0.1" />
       </map>
     </option>
   </component>
