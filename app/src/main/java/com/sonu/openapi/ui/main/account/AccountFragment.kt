@@ -7,6 +7,7 @@ import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import com.sonu.openapi.R
 import com.sonu.openapi.models.AccountProperties
+import com.sonu.openapi.ui.DataState
 import com.sonu.openapi.ui.main.account.state.AccountStateEvent
 import kotlinx.android.synthetic.main.fragment_account.*
 
@@ -43,7 +44,7 @@ class AccountFragment : BaseAccountFragment() {
                     data.data?.let { event ->
                         event.getContentIfNotHandled()?.let { viewState ->
                             viewState.accountProperties?.let { accountProperties ->
-                                Log.d(TAG, "AccountFragment, DataState: ${accountProperties}")
+                                Log.d(TAG, "AccountFragment, DataState: $accountProperties")
                                 viewModel.setAccountPropertiesData(accountProperties)
                             }
                         }
@@ -68,8 +69,9 @@ class AccountFragment : BaseAccountFragment() {
     }
 
     private fun setAccountDataFields(accountProperties: AccountProperties) {
-        email?.text = accountProperties.email
-        username?.text = accountProperties.username
+        email.text = accountProperties.email
+        username.text = accountProperties.username
+        stateChangeListener.onDataStateChange(DataState.loading(isLoading = false,cachedData = null))
     }
 
 

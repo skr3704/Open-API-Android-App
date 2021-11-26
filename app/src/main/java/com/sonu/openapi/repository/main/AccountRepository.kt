@@ -3,6 +3,7 @@ package com.sonu.openapi.repository.main
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.switchMap
+import com.sonu.openapi.api.GenericResponse
 import com.sonu.openapi.api.main.OpenApiMainService
 import com.sonu.openapi.models.AccountProperties
 import com.sonu.openapi.models.AuthToken
@@ -10,9 +11,13 @@ import com.sonu.openapi.persistence.AccountPropertiesDao
 import com.sonu.openapi.repository.NetworkBoundResource
 import com.sonu.openapi.session.SessionManager
 import com.sonu.openapi.ui.DataState
+import com.sonu.openapi.ui.Response
+import com.sonu.openapi.ui.ResponseType
 import com.sonu.openapi.ui.main.account.state.AccountViewState
+import com.sonu.openapi.util.AbsentLiveData
 import com.sonu.openapi.util.ApiSuccessResponse
 import com.sonu.openapi.util.GenericApiResponse
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.withContext
@@ -34,8 +39,9 @@ constructor(
         return object :
             NetworkBoundResource<AccountProperties, AccountProperties, AccountViewState>(
                 sessionManager.isConnectedToTheInternet(),
-                true,
-                true
+                isNetworkRequest = true,
+                shouldCancelIfNoInternet = false,
+                shouldLoadFromCache = true
             ) {
             override suspend fun handleApiSuccessResponse(response: ApiSuccessResponse<AccountProperties>) {
                 accountPropertiesDao.insertAndReplace(response.body)
@@ -83,6 +89,61 @@ constructor(
                 repositoryJob = job
             }
 
+
+        }.asLiveData()
+    }
+
+    fun saveAccountProperties(
+        authToken: AuthToken,
+        accountProperties: AccountProperties
+    ): LiveData<DataState<AccountViewState>> {
+        return object : NetworkBoundResource<GenericResponse, Any, AccountViewState>(
+            sessionManager.isConnectedToTheInternet(),
+            true,
+            true,
+            false
+        ) {
+            override suspend fun handleApiSuccessResponse(response: ApiSuccessResponse<GenericResponse>) {
+                withContext(Dispatchers.Main) {
+                    // finish with success response
+                    onCompleteJob(
+                        DataState.data(
+                            data = null,
+                            response = Response(response.body.response, ResponseType.Toast)
+                        )
+                    )
+                }
+            }
+
+
+
+            override fun createCall(): LiveData<GenericApiResponse<GenericResponse>> {
+                return openApiMainService.saveAccountProperties(
+                    "Token ${authToken.token!!}",
+                    accountProperties.email,
+                    accountProperties.username
+                )
+            }
+
+            override fun setJob(job: Job) {
+                repositoryJob?.cancel()
+                repositoryJob = job
+            }
+
+            // not used in this case
+            override fun loadFromCache(): LiveData<AccountViewState> {
+                return AbsentLiveData.create()
+            }
+
+            // not used in this case
+            override suspend fun updateLocalDb(cacheObject: Any?) {
+
+            }
+
+            // not used in this case
+            override suspend fun createCacheReqestAndReturn() {
+
+            }
 
         }.asLiveData()
     }

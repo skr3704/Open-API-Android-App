@@ -48,6 +48,7 @@ class AuthRepository @Inject constructor(
         return object : NetworkBoundResource<LoginResponse, Any, AuthViewState>(
             sessionManager.isConnectedToTheInternet(),
             true,
+            true,
             false
         ) {
             //not used in this case
@@ -138,6 +139,7 @@ class AuthRepository @Inject constructor(
         return object : NetworkBoundResource<RegistrationResponse, Any, AuthViewState>(
             sessionManager.isConnectedToTheInternet(),
             true,
+            true,
             false
         ) {
             //not used in this case
@@ -221,6 +223,7 @@ class AuthRepository @Inject constructor(
         }
         return object : NetworkBoundResource<Void, Void, AuthViewState>(
             sessionManager.isConnectedToTheInternet(),
+            false,
             false,
             false
         ) {
