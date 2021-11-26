@@ -34,6 +34,8 @@ class AuthActivity : BaseActivity(), NavController.OnDestinationChangedListener 
 
     }
 
+
+
     private fun checkForPreviousAuthUser() {
         viewmodel.setStateEvent(AuthStateEvent.CheckPreviousAuthEvent)
     }
@@ -87,5 +89,8 @@ class AuthActivity : BaseActivity(), NavController.OnDestinationChangedListener 
     private fun navigateToMainActivity() {
         startActivity(Intent(this, MainActivity::class.java))
         finish()
+    }
+    override fun expandAppBar() {
+        //not  use
     }
 }
