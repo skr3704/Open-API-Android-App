@@ -1,4 +1,7 @@
 package com.sonu.openapi.ui.main.account.state
 
-class AccountViewState {
-}
+import com.sonu.openapi.models.AccountProperties
+
+class AccountViewState(
+    var accountProperties: AccountProperties? = null
+)

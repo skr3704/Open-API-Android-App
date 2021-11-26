@@ -5,18 +5,26 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
 import com.sonu.openapi.R
 import com.sonu.openapi.ui.DataStateChangeListener
+import com.sonu.openapi.viewmodels.ViewModelProviderFactory
 import dagger.android.support.DaggerFragment
+import javax.inject.Inject
 
 abstract class BaseAccountFragment : DaggerFragment() {
 
     val TAG: String = "AppDebug"
 
+    @Inject
+    lateinit var providerFactory: ViewModelProviderFactory
+
     lateinit var stateChangeListener: DataStateChangeListener
+
+    lateinit var viewModel: AccountViewModel
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -33,6 +41,10 @@ abstract class BaseAccountFragment : DaggerFragment() {
             R.id.accountFragment,
             activity = activity as AppCompatActivity
         )
+
+        viewModel = activity?.run {
+            ViewModelProvider(this, providerFactory).get(AccountViewModel::class.java)
+        } ?: throw Exception("Invalid Activity")
 
     }
 

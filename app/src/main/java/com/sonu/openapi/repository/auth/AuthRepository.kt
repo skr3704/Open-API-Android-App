@@ -45,13 +45,23 @@ class AuthRepository @Inject constructor(
             return returnErrorResponse(loginError, ResponseType.Dialog)
         }
 
-        return object : NetworkBoundResource<LoginResponse, AuthViewState>(
+        return object : NetworkBoundResource<LoginResponse, Any, AuthViewState>(
             sessionManager.isConnectedToTheInternet(),
-            true
+            true,
+            false
         ) {
             //not used in this case
             override suspend fun createCacheReqestAndReturn() {
+            }
 
+            //not used in this case
+            override fun loadFromCache(): LiveData<AuthViewState> {
+                return AbsentLiveData.create()
+            }
+
+            //not used in this case
+            override suspend fun updateLocalDb(cacheObject: Any?) {
+                TODO("Not yet implemented")
             }
 
             override suspend fun handleApiSuccessResponse(response: ApiSuccessResponse<LoginResponse>) {
@@ -110,6 +120,7 @@ class AuthRepository @Inject constructor(
                 repositoryJob = job
             }
 
+
         }.asLiveData()
     }
 
@@ -124,12 +135,22 @@ class AuthRepository @Inject constructor(
         if (registrationFieldErrors != RegistrationFields.RegistrationError.none()) {
             return returnErrorResponse(registrationFieldErrors, ResponseType.Dialog)
         }
-        return object : NetworkBoundResource<RegistrationResponse, AuthViewState>(
+        return object : NetworkBoundResource<RegistrationResponse, Any, AuthViewState>(
             sessionManager.isConnectedToTheInternet(),
-            true
+            true,
+            false
         ) {
             //not used in this case
             override suspend fun createCacheReqestAndReturn() {
+            }
+
+            //not used in this case
+            override fun loadFromCache(): LiveData<AuthViewState> {
+                return AbsentLiveData.create()
+            }
+
+            //not used in this case
+            override suspend fun updateLocalDb(cacheObject: Any?) {
                 TODO("Not yet implemented")
             }
 
@@ -198,18 +219,29 @@ class AuthRepository @Inject constructor(
             Log.d(TAG, "checkPreviousAuthUser: No previously authenticated user found")
             return returnNoTokenFound()
         }
-        return object : NetworkBoundResource<Void, AuthViewState>(
+        return object : NetworkBoundResource<Void, Void, AuthViewState>(
             sessionManager.isConnectedToTheInternet(),
+            false,
             false
         ) {
-            //not  used in  this case
+            //not used in this case
+            override fun loadFromCache(): LiveData<AuthViewState> {
+                return AbsentLiveData.create()
+            }
+
+            //not used in this case
             override suspend fun handleApiSuccessResponse(response: ApiSuccessResponse<Void>) {
+            }
+
+            //not used in this case
+            override suspend fun updateLocalDb(cacheObject: Void?) {
             }
 
             //not used in this case
             override fun createCall(): LiveData<GenericApiResponse<Void>> {
                 return AbsentLiveData.create()
             }
+
 
             override suspend fun createCacheReqestAndReturn() {
                 accountPropertiesDao.searchByEmail(previousAuthUserEmail).let { accountProperties ->

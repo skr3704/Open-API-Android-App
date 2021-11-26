@@ -1,4 +1,20 @@
 package com.sonu.openapi.ui.main.account.state
 
-class AccountStateEvent {
+
+sealed class AccountStateEvent{
+
+    class GetAccountPropertiesEvent: AccountStateEvent()
+
+    data class UpdateAccountPropertiesEvent(
+        val email: String,
+        val username: String
+    ): AccountStateEvent()
+
+    data class ChangePasswordEvent(
+        val currentPassword: String,
+        val newPassword: String,
+        val confirmNewPassword: String
+    ) : AccountStateEvent()
+
+    class None: AccountStateEvent()
 }
